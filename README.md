@@ -1,2 +1,2 @@
 # python_utils
-python utility function pacakge
+python utility function package
