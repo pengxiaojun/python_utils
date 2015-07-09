@@ -1,0 +1,3 @@
+^[abc] ^a aa
+y$ y$ ext
+\broad\b \broad\b rd.
