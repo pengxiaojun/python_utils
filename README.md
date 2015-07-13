@@ -1,2 +1,2 @@
-# python_utils
-python utility function package
+# python_learning_notes
+python learning notes
