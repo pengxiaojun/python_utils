@@ -1,0 +1,14 @@
+<html>
+	<head>
+		<meta charset='utf-8' />
+		<title>Fetch all user</title>	
+	</head>
+	<body>
+		<h1>All user</h1>
+		{% for u in users %}
+		<li>
+			{{ u.name }} {{ u.email }}
+		</li>
+		{% endfor %}
+	</body>
+</html>
