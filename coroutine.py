@@ -1,5 +1,8 @@
 # -*-coding: utf-8 -*-
 
+import os
+import coroutine
+
 
 def consumer():
     r = ''
@@ -27,9 +30,53 @@ def producer(c):
 
     c.close()
 
+
+def list_dir(path, target):
+    for dirpath, dirnames, filenames in os.walk(path):
+        for filename in filenames:
+            print('list send', filename)
+            target.send(filename)
+
+
+def coroutine(func):
+    def wrapper(*args, **kwargs):
+        gen = func(*args, **kwargs)
+        print(func.__name__, 'next begin')
+        next(gen)
+        print(func.__name__, 'next end')
+        return gen
+
+    wrapper.__name__ = func.__name__
+    wrapper.__dict__ = func.__dict__
+    wrapper.__doc__ = func.__doc__
+
+    return wrapper
+
+
+@coroutine
+def filter_str(pattern, target):
+    while True:
+        print('filter begin')
+        filename = (yield)
+        if pattern in filename:
+            print('filter send %s' % filename)
+            target.send(filename)
+            print('filter send done')
+
+
+@coroutine
+def print_match():
+    while True:
+        print('print begin')
+        result = (yield)
+        print(result)
+        print('print end', result)
+
+
 if __name__ == '__main__':
     c = consumer()
     producer(c)
+    list_dir('.', filter_str('.txt', print_match()))
 
 # output
 # [Producer]produce 1

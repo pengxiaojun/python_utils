@@ -129,14 +129,14 @@ class ModelMetaclass(type):
                 mappings[k] = v
                 if v.primary_key:
                     if primary_key:
-                        raise StandardError('duplicate primary key %s' % k)
+                        raise Exception('duplicate primary key %s' % k)
                     primary_key = k
 
                 else:
                     fields.append(k)
 
         if not primary_key:
-            raise StandardError('Primary key not found')
+            raise Exception('Primary key not found')
 
         for k in mappings.keys():
             attrs.pop(k)
@@ -225,6 +225,7 @@ class Model(dict, metaclass=ModelMetaclass):
                 raise ValueError('Invalid limit value:%s' % str(limit))
 
         rs = yield from select(' '.join(sql), args)
+        print(rs)
         return [cls(**r) for r in rs]
 
 

@@ -344,6 +344,7 @@ def api_create_comment(id, request, *, content):
                       user_image = user.image,
                       content = content.strip())
     yield from comment.save()
+    print("save comment")
     return comment
 
 

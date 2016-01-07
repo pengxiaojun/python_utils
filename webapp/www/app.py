@@ -84,27 +84,32 @@ def response_factory(app, handler):
         logging.info('Response handler...')
         r = yield from handler(request)
         if isinstance(r, web.StreamResponse):
+            print("web  response route", request.path)
             return r
         if isinstance(r, bytes):
             resp = web.Response(body=r)
             resp.content_type = 'application/octet-stream'
+            print("web  response bytes", request.path)
             return resp
         if isinstance(r, str):
             if r.startswith('redirect:'):
                 return web.HTTPFound(r[9:])
             resp = web.Response(body=r.encode('utf-8'))
             resp.content_type = 'text/html;charset=utf-8'
+            print("web  response string", request.path)
             return resp
         if isinstance(r, dict):
             template = r.get('__template__')
             if template is None:
                 resp = web.Response(body=json.dumps(r, ensure_ascii=False, default=lambda o:o.__dict__).encode('utf-8'))
                 resp.content_type = 'application/json;charset=utf-8'
+                print("web  response json", request.path)
                 return resp
             else:
                 r['__user__'] = request.__user__
                 resp = web.Response(body=app['__templating__'].get_template(template).render(**r).encode('utf-8'))
                 resp.content_type = 'text/html;charset=utf-8'
+                print("web  response dict", request.path)
                 return resp
 
         if isinstance(r, int) and r >= 100 and r < 600:
