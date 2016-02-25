@@ -1,0 +1,65 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+    <link rel="stylesheet" type="text/css" href="mirror.css" media="screen" />
+    <link rel="shortcut icon" href="favicon.ico" />
+    <script type="text/javascript" src="jquery-1.11.3.min.js"></script>
+    <title>Upload测试</title>
+    <script type="text/javascript">
+        var do_submit = false;
+        function upload_file(){
+            if (document.getElementById("file").value == "")
+            {
+                $("#uploadInfo").text("请选择要上传的文件");
+                //document.getElementById("uploadInfo").innerHTML="请选择要上传的文件";
+                return false;
+            }
+            //document.getElementById("uploadInfo").innerHTML="";
+            //document.getElementById("uploadInfo").innerHTML='<img src="wait.gif">文件上传中,请稍候...';
+            //document.getElementById("uploadForm").submit();
+            $("#uploadInfo").html('<img src="wait.gif"> 文件上传中，请稍等...');
+            $("#uploadForm").submit();
+            do_submit = true;
+        }
+        function check_upload(){
+            if (do_submit){
+                $("#uploadInfo").html("上传成功");
+            }
+        }
+    </script>
+</head>
+
+<body>
+<iframe width="0" onload="check_upload()" height="0" border="0" name="dummyframe" id="dummyframe" style="display:none"></iframe>
+<form id="uploadForm" action="http://192.168.1.25:12323" target="dummyframe" method="post" accept-charset="utf-8" enctype="multipart/form-data">
+    <label for="file">File</label>
+    <input id="file" name="file" type="file" value="" />
+    <input type="button" onclick="upload_file()" value="上传"/><br/>
+    <!--<input type="submit" value="上传"/><br/>-->
+    <div id="uploadInfo"></div>
+</form>
+</body>
+<script>
+       // $('#uploadForm').submit(function(e){
+       //    if ($("#file").val() == ""){
+       //        $("#uploadInfo").text("请选择要上传的文件");
+       //        return false;
+       //    }
+   	   // var data = new FormData(this);
+       // $("#uploadInfo").html('<img src="wait.gif"> 文件上传中，请稍等...');
+   	   // e.preventDefault();
+   	   // $.ajax({
+   	   // 	url: "http://192.168.1.25:12323",
+   	   // 	type: "post",
+   	   // 	data: data,
+   	   // 	processData: false,
+   	   // 	contentType: false,
+   	   // 	success: function(){
+       //         $("#uploadInfo").html('上传成功');
+       //  	}
+   	   // });
+   	   // });
+
+    </script>
+</html>
