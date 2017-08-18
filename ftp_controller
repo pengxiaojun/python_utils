@@ -1,0 +1,42 @@
+#!/usr/bin/env python
+--coding--:utf-8
+
+import sys
+import pexpect
+
+# standard ftp prompt
+ftpPrompt = 'ftp>'
+
+# start ftp server, and write the output log to stdout
+process = pexpect.spawn('ftp your-ftp-server')
+process.logfile_read = sys.stdout
+
+# auto login ftp
+process.expect('[Nn]ame')
+process.sendline('dev')
+process.expect('[Pp]assword')
+process.sendline('secretpassword')
+
+# pre-defined command, command in lists will be send to ftp server automaticlly
+cmdList = ("passive", 'hash')
+
+for cmd in cmdList:
+    process.expect(ftpPrompt)
+    process.sendline(cmd)
+
+process.expect(ftpPrompt)
+
+# in here, the control of ftp server will be returned to user. the control will be pass to python script after user press ctrl+]
+# ctrl+] is the default value for pass control, user can setting any other keys such as ‘\x2a’. 
+# '\x2a' \x means the prefix hex number. 2a meas star number in ASCII. the setting keys must be prefix with hex number \x
+process.interact()
+
+# when user send control return to script, the script will make the ftp server exit
+# take case of the sendline() command，它很重要。用户将控制权交还给脚本的时候，
+# 脚本缓存里面是没任何内容的，所以也不可能匹配，这里发送一个回车符会从服务器取得
+# 一些内容，这样就可以匹配了。
+# 最后的EOF是确认FTP连接完成的方法。
+process.sendline() # it is important
+process.expect(ftpPrompt)
+process.sendline('by')
+process.expect(pexpect.EOF)
